@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 from .forms import RegistrationForm, AccountAuthenticationForm
 
@@ -42,3 +42,11 @@ class LoginView(APIView):
                     return Response({"status": 200}, status=status.HTTP_200_OK)
         
         return Response({"status": 400}, status=status.HTTP_400_BAD_REQUEST)
+
+class LogoutView(APIView):
+    def get(self, request, format=None):
+        if not request.user.is_authenticated:
+            return Response({"status": 400}, status=status.HTTP_400_BAD_REQUEST)
+
+        logout(request)
+        return Response({"status": 200}, status=status.HTTP_200_OK)
