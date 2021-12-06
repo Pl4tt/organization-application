@@ -43,7 +43,7 @@ class Account(AbstractBaseUser):
     username = models.CharField(max_length=25, unique=True)
     first_name = models.CharField(max_length=25)
     last_name = models.CharField(max_length=25)
-    biography = models.CharField(max_length=255)
+    biography = models.CharField(max_length=255, default="I'm just boring :/")
     date_created = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
     hide_email = models.BooleanField(default=False)

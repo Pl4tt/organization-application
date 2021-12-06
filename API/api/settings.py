@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     "account",
+    "teams",
 
     "rest_framework",
 ]
