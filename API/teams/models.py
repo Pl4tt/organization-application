@@ -27,6 +27,9 @@ class Team(models.Model):
 
             self.save()
         
+    def check_member(self, user):
+        return user in self.members.all()
+
     def add_administrator(self, user):
         self.add_user(user)
 
@@ -40,6 +43,9 @@ class Team(models.Model):
             self.administrators.remove(user)
 
             self.save()
+
+    def check_admin(self, user):
+        return user in self.administrators.all()
 
     def set_owner(self, user):
         self.add_user(user)

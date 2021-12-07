@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate, login, logout
 
 from .forms import RegistrationForm, AccountAuthenticationForm
@@ -21,9 +22,9 @@ class RegistrationView(APIView):
                 account = authenticate(email=email, password=password)
                 login(request, account)
 
-                return Response({"status": 200}, status=status.HTTP_200_OK)
+                return Response({"success": "Account created successfully!"}, status=status.HTTP_200_OK)
     
-        return Response({"status": 400}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Registration data is not valid."}, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(APIView):
     def post(self, request, format=None):
@@ -39,14 +40,17 @@ class LoginView(APIView):
 
                 if account:
                     login(request, account)
-                    return Response({"status": 200}, status=status.HTTP_200_OK)
+                    return Response({"success": "Logged in successfully!"}, status=status.HTTP_200_OK)
         
-        return Response({"status": 400}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Login data is not valid."}, status=status.HTTP_400_BAD_REQUEST)
 
 class LogoutView(APIView):
+    
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request, format=None):
         if not request.user.is_authenticated:
-            return Response({"status": 400}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"success": "Error while trying to log out."}, status=status.HTTP_400_BAD_REQUEST)
 
         logout(request)
-        return Response({"status": 200}, status=status.HTTP_200_OK)
+        return Response({"success": "Logged out successfully."}, status=status.HTTP_200_OK)
