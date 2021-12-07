@@ -16,6 +16,14 @@
         delete_team: {
             method: DELETE
         },
+        update_team: {
+            method: PATCH,
+            body: {
+                name: new_name / name,
+                administrators: new_administrators / administrators,
+                members: new_members / members
+            }
+        },
     },
 }
 
@@ -55,7 +63,6 @@ class TeamView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, team_id, format=None):
-        print(request.query_params)
         team = Team.objects.filter(pk=team_id).first()
 
         if not team:
@@ -80,9 +87,7 @@ class TeamView(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    def delete(self, request, format=None):
-        team_id = request.query_params.get("id")
-
+    def delete(self, request, team_id, format=None):
         team = Team.objects.filter(pk=team_id).first()
 
         if not team:
@@ -94,3 +99,31 @@ class TeamView(APIView):
         team.delete()
 
         return Response({"success": "Team deleted successfully"}, status=status.HTTP_200_OK)
+
+    def patch(self, request, team_id, format=None):
+        team = Team.objects.filter(pk=team_id).first()
+
+        if not team:
+            return Response({"error": "You cannot update a non existing team."}, status=status.HTTP_404_NOT_FOUND)
+
+        if not team.check_admin(request.user) and not request.user == team.owner:
+            return Response({"error": "You are not authorized to update this team."}, status=status.HTTP_401_UNAUTHORIZED)
+
+        new_name = request.data.get("name")
+        new_admins = request.data.get("administrators")
+        new_members = request.data.get("members")
+
+        if new_name is not None:
+            team.name = new_name
+        
+        if new_admins is not None:
+            new_admins = list(filter(lambda id: get_user_model().objects.filter(pk=id).first() is not None, new_admins))
+            team.administrators.set(list(map(lambda id: get_user_model().objects.get(pk=id), new_admins)))
+        
+        if new_members is not None:
+            new_members = list(filter(lambda id: get_user_model().objects.filter(pk=id).first() is not None, new_members))
+            team.members.set(list(map(lambda id: get_user_model().objects.get(pk=id), new_members)))
+
+        team.save(update_fields=["name"])
+
+        return Response({"success": "Team updated successfully!"}, status=status.HTTP_200_OK)
