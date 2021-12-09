@@ -9,5 +9,5 @@ from .views import (
 app_name = "teams"
 urlpatterns = [
     path("create", CreateTeamView.as_view(), name="create"),
-    path("<int:team_id>", TeamView.as_view(), name="team_view"),
+    path("<int:team_id>", TeamView.as_view(), name="team-view"),
 ]

@@ -35,6 +35,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.humanize.templatetags.humanize import naturalday
 
 from .models import Team
 from .serializers import TeamSerializer
@@ -77,8 +78,8 @@ class TeamView(APIView):
             "owner": team.owner.pk,
             "administrators": list(map(lambda admin: admin.pk, team.administrators.all())),
             "members": list(map(lambda member: member.pk, team.members.all())),
-            "date_created": team.date_created,
-            "last_update": team.last_update,
+            "date_created": naturalday(str(team.date_created)),
+            "last_update": naturalday(str(team.last_update)),
         }
         serializer = TeamSerializer(team, data=team_data)
         

@@ -46,7 +46,8 @@ class Account(AbstractBaseUser):
     biography = models.CharField(max_length=255, default="I'm just boring :/")
     date_created = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
-    hide_email = models.BooleanField(default=False)
+    hide_email = models.BooleanField(default=True)
+    hide_name = models.BooleanField(default=True)
     # TODO: implement profile picture
 
     is_active = models.BooleanField(default=True)

@@ -5,6 +5,7 @@ from .views import (
     RegistrationView,
     LoginView,
     LogoutView,
+    UserView,
 )
 
 
@@ -13,5 +14,6 @@ urlpatterns = [
     path("register", RegistrationView.as_view(), name="register"),
     path("login", LoginView.as_view(), name="login"),
     path("logout", LogoutView.as_view(), name="logout"),
-    path("get-token", obtain_auth_token, name="get_token")
+    path("user", UserView.as_view(), name="user-data"),
+    path("obtain-token", obtain_auth_token, name="obtain-token"),
 ]

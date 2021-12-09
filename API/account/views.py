@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.humanize.templatetags.humanize import naturalday
 
 from .forms import RegistrationForm, AccountAuthenticationForm
 
@@ -54,3 +55,29 @@ class LogoutView(APIView):
 
         logout(request)
         return Response({"success": "Logged out successfully."}, status=status.HTTP_200_OK)
+
+class UserView(APIView):
+
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, format=None):
+        user = request.user
+        print(user.pk)
+        if not user.is_authenticated:
+            return Response({"error": "No user given."}, status=status.HTTP_404_NOT_FOUND)
+        
+        data = {
+            "id": user.pk,
+            "email": user.email if not user.hide_email else "******",
+            "username": user.username,
+            "first_name": user.first_name,
+            "last_name": user.last_name if not user.hide_name else "******",
+            "biography": user.biography if not user.hide_name else "******",
+            "date_created": naturalday(str(user.date_created)),
+            "hide_email": user.hide_email,
+        }
+
+        return Response(data, status=status.HTTP_200_OK)
+
+        
+        
