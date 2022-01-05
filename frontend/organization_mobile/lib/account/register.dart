@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:organization_mobile/account/login.dart';
+import 'package:organization_mobile/urls.dart';
 
 class Register extends StatelessWidget {
   final http.Client client;
@@ -20,8 +21,26 @@ class Register extends StatelessWidget {
   TextEditingController pass1Controller = new TextEditingController();
   TextEditingController pass2Controller = new TextEditingController();
 
-  void _register() {
+  void _register(BuildContext context) async {
+    var data = {
+      "email": emailController.text,
+      "username": usernameController.text,
+      "first_name": firstNameController.text,
+      "last_name": lastNameController.text,
+      "password1": pass1Controller.text,
+      "password2": pass2Controller.text,
+    };
+    var response = await client.post(registerUrl, body: data);
+    
+    if (response.statusCode != 200) {
+      return null;
+    }
+
+    var token = await obtainToken(emailController.text, pass1Controller.text, client);
+    
     callbackRebuild();
+
+    Navigator.of(context).pop();
   }
 
   @override
@@ -92,7 +111,7 @@ class Register extends StatelessWidget {
               ),
             ),
           ),
-          ElevatedButton(onPressed: _register, child: const Text("Register")),
+          ElevatedButton(onPressed: () => _register(context), child: const Text("Register")),
         ],
       ),
       resizeToAvoidBottomInset: false,

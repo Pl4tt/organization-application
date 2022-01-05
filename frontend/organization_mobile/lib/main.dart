@@ -5,6 +5,7 @@ import 'package:organization_mobile/navigator/home.dart';
 import 'package:organization_mobile/navigator/profile.dart';
 import 'package:organization_mobile/navigator/teams.dart';
 import 'package:http/http.dart' as http;
+import 'package:organization_mobile/urls.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum NavigationSelector {
@@ -54,6 +55,20 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+
+    buildAppBar();
+  }
+
+  void _logout() async {
+    var prefs = await SharedPreferences.getInstance();
+
+    client.get(
+      logoutUrl,
+      headers: {
+        "Authorization": "Token ${await getToken()}",
+      }
+    );
+    prefs.remove("authtoken");
 
     buildAppBar();
   }
@@ -168,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
             icon: const Icon(Icons.logout),
             tooltip: "Logout",
-            onPressed: () => {}, // TODO: logout functionality
+            onPressed: _logout,
           ),
         ],
       )

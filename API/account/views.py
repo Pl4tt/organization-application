@@ -51,7 +51,7 @@ class LogoutView(APIView):
 
     def get(self, request, format=None):
         if not request.user.is_authenticated:
-            return Response({"success": "Error while trying to log out."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Error while trying to log out."}, status=status.HTTP_400_BAD_REQUEST)
 
         logout(request)
         return Response({"success": "Logged out successfully."}, status=status.HTTP_200_OK)

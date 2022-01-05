@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 var registerUrl = Uri.parse("http://10.0.2.2:8000/account/register");
 var loginUrl = Uri.parse("http://10.0.2.2:8000/account/login");
+var logoutUrl = Uri.parse("http://10.0.2.2:8000/account/logout");
 var obtainTokenUrl = Uri.parse("http://10.0.2.2:8000/account/obtain-token");
 var getAccountDataUrl = Uri.parse("http://10.0.2.2:8000/account/user");
 
@@ -22,4 +23,9 @@ Future<String> obtainToken(String username, String password, http.Client client)
   prefs.setString("authtoken", token);
 
   return token;
+}
+
+Future<String?> getToken() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString("authtoken");
 }
