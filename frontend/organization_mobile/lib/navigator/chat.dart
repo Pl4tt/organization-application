@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Chat extends StatefulWidget {
-  const Chat({ Key? key }) : super(key: key);
+  final http.Client client;
+
+  const Chat({
+    Key? key,
+    required this.client,
+  }) : super(key: key);
 
   @override
   _ChatState createState() => _ChatState();

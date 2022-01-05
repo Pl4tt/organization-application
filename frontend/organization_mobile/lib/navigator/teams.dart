@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Teams extends StatefulWidget {
-  const Teams({ Key? key }) : super(key: key);
+  final http.Client client;
+
+  const Teams({
+    Key? key,
+    required this.client,
+  }) : super(key: key);
 
   @override
   _TeamsState createState() => _TeamsState();

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:organization_mobile/account/choose_option.dart';
 import 'package:organization_mobile/navigator/chat.dart';
 import 'package:organization_mobile/navigator/home.dart';
 import 'package:organization_mobile/navigator/profile.dart';
 import 'package:organization_mobile/navigator/teams.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum NavigationSelector {
   home,
@@ -42,12 +45,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   int _selectedIndex = 0;
   NavigationSelector _currPage = NavigationSelector.home;
+  http.Client client = http.Client();
 
-  void _incrementCounter() {
-    _counter += 1;
+  AppBar? appBar;
+
+  @override
+  void initState() {
+    super.initState();
+
+    buildAppBar();
   }
   
   void _onItemTapped(int index) {
@@ -77,33 +85,33 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: appBar == null
+        ? AppBar(title: Text(widget.title))
+        : appBar!,
       body: buildContent(),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () => {},
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
     
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.shifting,
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
+            icon: Icon(Icons.chat_rounded),
             label: 'Chat',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
+            icon: Icon(Icons.group),
             label: 'Teams',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
+            icon: Icon(Icons.account_circle),
             label: 'Profile',
           ),
         ],
@@ -119,16 +127,51 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget buildContent() {
     switch (_currPage) {
       case NavigationSelector.home:
-        return Home();
+        return Home(client: client);
       
       case NavigationSelector.chat:
-        return Chat();
+        return Chat(client: client);
 
       case NavigationSelector.teams:
-        return Teams();
+        return Teams(client: client);
 
       case NavigationSelector.profile:
-        return Profile();
+        return Profile(client: client);
     }
+  }
+
+  void buildAppBar() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString("authtoken");
+
+    if (token == null) {
+      setState(() => appBar = AppBar(
+        title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.login),
+            tooltip: "Sign in",
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => ChooseOption(
+                client: client,
+                callbackRebuild: buildAppBar,
+              ))
+            ),
+          ),
+        ],
+      ));
+      return null;
+    }
+    setState(() => appBar = AppBar(
+        title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: "Logout",
+            onPressed: () => {}, // TODO: logout functionality
+          ),
+        ],
+      )
+    );
   }
 }

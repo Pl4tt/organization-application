@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:organization_mobile/account/login.dart';
 
 class Register extends StatelessWidget {
-  Register({Key? key}) : super(key: key);
+  final http.Client client;
+  final Function callbackRebuild;
+
+  Register({
+    Key? key,
+    required this.client,
+    required this.callbackRebuild,
+  }) : super(key: key);
 
   // fields = ("email", "username", "first_name", "last_name", "password1", "password2")
   TextEditingController emailController = new TextEditingController();
@@ -13,7 +21,7 @@ class Register extends StatelessWidget {
   TextEditingController pass2Controller = new TextEditingController();
 
   void _register() {
-
+    callbackRebuild();
   }
 
   @override
@@ -85,10 +93,6 @@ class Register extends StatelessWidget {
             ),
           ),
           ElevatedButton(onPressed: _register, child: const Text("Register")),
-          ElevatedButton(onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => Login())),
-            child: const Text("Login instead"),
-          ),
         ],
       ),
       resizeToAvoidBottomInset: false,
