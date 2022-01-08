@@ -17,6 +17,7 @@ class _TeamsState extends State<Teams> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text("Teams")),
       body: const Text("TEAMS"),
     );
   }

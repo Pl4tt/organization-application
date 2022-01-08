@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Organization Application',
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
@@ -50,29 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
   NavigationSelector _currPage = NavigationSelector.home;
   http.Client client = http.Client();
 
-  AppBar? appBar;
 
-  @override
-  void initState() {
-    super.initState();
-
-    buildAppBar();
-  }
-
-  void _logout() async {
-    var prefs = await SharedPreferences.getInstance();
-
-    client.get(
-      logoutUrl,
-      headers: {
-        "Authorization": "Token ${await getToken()}",
-      }
-    );
-    prefs.remove("authtoken");
-
-    buildAppBar();
-  }
-  
   void _onItemTapped(int index) {
     switch (index) {
       case 0:
@@ -100,9 +78,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar == null
-        ? AppBar(title: Text(widget.title))
-        : appBar!,
       body: buildContent(),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {},
@@ -153,40 +128,5 @@ class _MyHomePageState extends State<MyHomePage> {
       case NavigationSelector.profile:
         return Profile(client: client);
     }
-  }
-
-  void buildAppBar() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString("authtoken");
-
-    if (token == null) {
-      setState(() => appBar = AppBar(
-        title: Text(widget.title),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.login),
-            tooltip: "Sign in",
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => ChooseOption(
-                client: client,
-                callbackRebuild: buildAppBar,
-              ))
-            ),
-          ),
-        ],
-      ));
-      return null;
-    }
-    setState(() => appBar = AppBar(
-        title: Text(widget.title),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: "Logout",
-            onPressed: _logout,
-          ),
-        ],
-      )
-    );
   }
 }
