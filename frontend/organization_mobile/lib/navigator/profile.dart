@@ -18,12 +18,17 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   AppBar? appBar;
+  
+  bool isLoading = true;
+
+  
 
   @override
   void initState() {
     super.initState();
 
     buildAppBar();
+    getData();
   }
   
   void _logout() async {
@@ -38,19 +43,49 @@ class _ProfileState extends State<Profile> {
     prefs.remove("authtoken");
 
     buildAppBar();
+    getData();
+  }
+
+  void getData() async {
+    String? token = await getToken();
+
+    if (token == null) {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ChooseOption(
+          client: widget.client,
+          callbackRebuild: () {
+            buildAppBar();
+            getData();
+          }
+        )
+      ));
+      return null;
+    }
+
+    var response = await widget.client.post(
+      getAccountDataUrl,
+      headers: {
+        "Authorization": "Token ${await getToken()}",
+      }
+    );
+    setState(() => isLoading = false);
+    print(response.body);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar ?? AppBar(title: const Text("Profile")),
-      body: const Text("PROFILE"),
+      body: isLoading
+        ? const Text("Please authenticate first.")
+        : Column(
+
+        ), // TODO: Profile overview
     );
   }
 
   void buildAppBar() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString("authtoken");
+    String? token = await getToken();
     
     if (token == null) {
       setState(() => appBar = AppBar(

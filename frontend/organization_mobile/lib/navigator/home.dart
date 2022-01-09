@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:organization_mobile/account/search.dart';
+import 'package:organization_mobile/urls.dart';
 
 class Home extends StatefulWidget {
   final http.Client client;
@@ -18,7 +20,19 @@ class _HomeState extends State<Home> {
   Widget appBarTitle = const Text("Home");
   TextEditingController queryController = new TextEditingController();
 
-  void _search() {}
+  void _search() async {
+    String searchQuery = queryController.text;
+
+    var response = await widget.client.get(
+      searchUrl(searchQuery)
+    );
+
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Search(
+      client: widget.client,
+      accounts: response.body,
+    )));
+    print(response.body);
+  }
 
   @override
   Widget build(BuildContext context) {
