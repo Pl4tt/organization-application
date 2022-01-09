@@ -29,7 +29,7 @@ class _ProfileState extends State<Profile> {
   void _logout() async {
     var prefs = await SharedPreferences.getInstance();
 
-    widget.client.get(
+    widget.client.post(
       logoutUrl,
       headers: {
         "Authorization": "Token ${await getToken()}",
