@@ -4,19 +4,19 @@ import 'package:organization_mobile/account/choose_option.dart';
 import 'package:organization_mobile/urls.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Profile extends StatefulWidget {
+class Account extends StatefulWidget {
   final http.Client client;
 
-  const Profile({
+  const Account({
     Key? key,
     required this.client,
   }) : super(key: key);
 
   @override
-  _ProfileState createState() => _ProfileState();
+  _AccountState createState() => _AccountState();
 }
 
-class _ProfileState extends State<Profile> {
+class _AccountState extends State<Account> {
   AppBar? appBar;
   
   bool isLoading = true;
@@ -80,7 +80,7 @@ class _ProfileState extends State<Profile> {
         ? const Text("Please authenticate first.")
         : Column(
 
-        ), // TODO: Profile overview
+        ), // TODO: Account overview
     );
   }
 

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:organization_mobile/account/search.dart';
@@ -23,15 +25,14 @@ class _HomeState extends State<Home> {
   void _search() async {
     String searchQuery = queryController.text;
 
-    var response = await widget.client.get(
+    var responseBody = json.decode((await widget.client.get(
       searchUrl(searchQuery)
-    );
+    )).body);
 
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => Search(
       client: widget.client,
-      accounts: response.body,
+      accounts: responseBody,
     )));
-    print(response.body);
   }
 
   @override
