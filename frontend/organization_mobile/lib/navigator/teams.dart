@@ -16,6 +16,8 @@ class Teams extends StatefulWidget {
 
 class _TeamsState extends State<Teams> {
 
+  void _refreshTeams() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +30,10 @@ class _TeamsState extends State<Teams> {
             tooltip: "Create Team",
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => CreateTeam(),
+                builder: (context) => CreateTeam(
+                  client: widget.client,
+                  callBackRefresh: _refreshTeams,
+                ),
               )
             ),
           )

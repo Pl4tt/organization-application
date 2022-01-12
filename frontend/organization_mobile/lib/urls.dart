@@ -39,3 +39,6 @@ Uri searchUrl(String query) =>
 Uri getUserDataUrl(int id) =>
   Uri.parse("http://10.0.2.2:8000/account/user?user-id=$id");
   
+
+// team urls
+var createTeamUrl = Uri.parse("http://10.0.2.2:8000/teams/create");
