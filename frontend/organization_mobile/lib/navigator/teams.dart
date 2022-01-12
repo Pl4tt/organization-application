@@ -14,10 +14,23 @@ class Teams extends StatefulWidget {
 }
 
 class _TeamsState extends State<Teams> {
+
+  void _createTeam() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Teams")),
+      appBar: AppBar(
+        title: const Text("Teams"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.group_add_sharp),
+            iconSize: 35,
+            tooltip: "Create Team",
+            onPressed: _createTeam,
+          )
+        ]
+      ),
       body: const Text("TEAMS"),
     );
   }
