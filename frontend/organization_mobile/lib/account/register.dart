@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:organization_mobile/account/login.dart';
 import 'package:organization_mobile/urls.dart';
 
 class Register extends StatelessWidget {

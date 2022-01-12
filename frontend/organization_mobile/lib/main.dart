@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:organization_mobile/account/choose_option.dart';
 import 'package:organization_mobile/navigator/chat.dart';
 import 'package:organization_mobile/navigator/home.dart';
 import 'package:organization_mobile/navigator/account.dart';
 import 'package:organization_mobile/navigator/teams.dart';
 import 'package:http/http.dart' as http;
-import 'package:organization_mobile/urls.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 enum NavigationSelector {
   home,

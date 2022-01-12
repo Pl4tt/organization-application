@@ -70,7 +70,6 @@ class _AccountState extends State<Account> {
       }
     );
     setState(() => isLoading = false);
-    print(response.body);
   }
 
   @override
