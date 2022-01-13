@@ -128,3 +128,30 @@ class TeamView(APIView):
         team.save(update_fields=["name"])
 
         return Response({"success": "Team updated successfully!"}, status=status.HTTP_200_OK)
+
+class TeamOverview(APIView):
+
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, format=None):
+        teams = request.user.teams.all()
+        all_teams = []
+
+        for team in teams:
+            data = {
+                "id": team.pk,
+                "name": team.name,
+                "owner": team.owner.pk,
+                "administrators": list(map(lambda admin: admin.pk, team.administrators.all())),
+                "members": list(map(lambda member: member.pk, team.members.all())),
+                "date_created": naturalday(str(team.date_created)),
+                "last_update": naturalday(str(team.last_update)),
+            }
+            serializer = TeamSerializer(team, data=data)
+
+            if serializer.is_valid():
+                serializer.save()
+            
+            all_teams.append(serializer.data)
+        
+        return Response(all_teams, status=status.HTTP_200_OK)

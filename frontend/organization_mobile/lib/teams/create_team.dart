@@ -52,7 +52,7 @@ class CreateTeam extends StatelessWidget {
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: TextField(
               controller: nameController,
-              maxLength: 60,
+              maxLength: 30,
               decoration: const InputDecoration(
                 hintText: "Team Name",
               ),

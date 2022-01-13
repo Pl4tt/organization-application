@@ -42,3 +42,4 @@ Uri getUserDataUrl(int id) =>
 
 // team urls
 var createTeamUrl = Uri.parse("http://10.0.2.2:8000/teams/create");
+var teamOverviewUrl = Uri.parse("http://10.0.2.2:8000/teams");
