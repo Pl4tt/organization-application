@@ -47,9 +47,12 @@ INSTALLED_APPS = [
 
     "account",
     "teams",
+    "chat",
 
     "rest_framework",
     "rest_framework.authtoken",
+    
+    "channels",
 ]
 
 MIDDLEWARE = [
