@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 // token handle
-var obtainTokenUrl = Uri.parse("http://10.0.2.2:8000/account/obtain-token");
+Uri obtainTokenUrl = Uri.parse("http://10.0.2.2:8000/account/obtain-token");
 
 Future<String> obtainToken(String username, String password, http.Client client) async {
   final prefs = await SharedPreferences.getInstance();
@@ -28,10 +28,10 @@ Future<String?> getToken() async {
 
 
 // account urls
-var registerUrl = Uri.parse("http://10.0.2.2:8000/account/register");
-var loginUrl = Uri.parse("http://10.0.2.2:8000/account/login");
-var logoutUrl = Uri.parse("http://10.0.2.2:8000/account/logout");
-var getAccountDataUrl = Uri.parse("http://10.0.2.2:8000/account/user");
+Uri registerUrl = Uri.parse("http://10.0.2.2:8000/account/register");
+Uri loginUrl = Uri.parse("http://10.0.2.2:8000/account/login");
+Uri logoutUrl = Uri.parse("http://10.0.2.2:8000/account/logout");
+Uri getAccountDataUrl = Uri.parse("http://10.0.2.2:8000/account/user");
 
 Uri searchUrl(String query) =>
   Uri.parse("http://10.0.2.2:8000/account/search?search-query=$query");
@@ -41,5 +41,12 @@ Uri getUserDataUrl(int id) =>
   
 
 // team urls
-var createTeamUrl = Uri.parse("http://10.0.2.2:8000/teams/create");
-var teamOverviewUrl = Uri.parse("http://10.0.2.2:8000/teams");
+Uri createTeamUrl = Uri.parse("http://10.0.2.2:8000/teams/create");
+Uri teamOverviewUrl = Uri.parse("http://10.0.2.2:8000/teams");
+
+
+// chat urls
+Uri chatSocketUrl(int id) =>
+  Uri.parse("wss://10.0.2.2/ws/chat/$id");
+
+Uri createChatUrl = Uri.parse("http://10.0.2.2:8000/chat/create");
