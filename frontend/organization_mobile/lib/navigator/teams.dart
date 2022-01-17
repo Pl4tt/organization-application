@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:organization_mobile/teams/create_team.dart';
+import 'package:organization_mobile/teams/team_view.dart';
 import 'package:organization_mobile/urls.dart';
 
 class Teams extends StatefulWidget {
@@ -68,7 +69,20 @@ class _TeamsState extends State<Teams> {
               return ListTile(
                 title: Text(teams[index]["name"]),
                 subtitle: Text("Created at " + teams[index]["date_created"]),
-                onTap: () => {}, // TODO: navigation
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => TeamView(
+                    client: widget.client,
+                    team: {
+                      "id": teams[index]["id"],
+                      "name": teams[index]["name"],
+                      "date_created": teams[index]["date_created"],
+                      "last_update": teams[index]["last_update"],
+                      "owner": teams[index]["owner"],
+                      "administrators": teams[index]["administrators"],
+                      "members": teams[index]["members"],
+                    }
+                  ),
+                ))
               );
             },
           )

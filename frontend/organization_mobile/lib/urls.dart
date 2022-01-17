@@ -50,3 +50,4 @@ Uri chatSocketUrl(int id) =>
   Uri.parse("wss://10.0.2.2/ws/chat/$id");
 
 Uri createChatUrl = Uri.parse("http://10.0.2.2:8000/chat/create");
+Uri chatOverviewUrl = Uri.parse("http://10.0.2.2:8000/chat");
