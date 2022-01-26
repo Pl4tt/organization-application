@@ -9,6 +9,9 @@ class Chat(models.Model):
 
     def __str__(self):
         return f"chat {self.creator}, {self.member}"
+    
+    def is_member(self, user):
+        return user == self.member or user == self.creator
 
 
 class Message(models.Model):

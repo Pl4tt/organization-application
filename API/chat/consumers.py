@@ -13,7 +13,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
         
         try:
             chat = await sync_to_async(Chat.objects.get, thread_sensitive=True)(pk=self.chat_id)
-            self.room_name = chat.name
-            self.room_group_name = f"chat_{self.room_group_name}"
+            self.room_name = chat.pk
+            self.room_group_name = f"chat_{self.room_name}"
         except Chat.DoesNotExist:
             await self.close()
+            return
+        
+        if not self.user.is_authenticated:
+            await self.close()
+            return
+        
+        if not await sync_to_async(chat.is_member)(self.user):
+            await self.close()
+            return
+
+        self.accept()
+    
+    async def disconnect(self, close_code):
+        pass
