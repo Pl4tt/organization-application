@@ -27,7 +27,7 @@ class Login extends StatelessWidget {
       return null;
     }
 
-    var token = await obtainToken(emailController.text, passwordController.text, client);
+    await obtainToken(emailController.text, passwordController.text, client);
     
     callbackRebuild();
 
