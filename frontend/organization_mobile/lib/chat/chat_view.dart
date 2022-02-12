@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:organization_mobile/urls.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/io.dart';
 
 class ChatView extends StatefulWidget {
   http.Client client;
@@ -20,20 +20,35 @@ class ChatView extends StatefulWidget {
 class _ChatViewState extends State<ChatView> {
   TextEditingController messageController = TextEditingController();
   var chatSocket;
+  Map<String, dynamic>? authHeader;
 
+  @override
   void initState() {
     super.initState();
 
-    setState(() => chatSocket = WebSocketChannel.connect(chatSocketUrl(widget.chat["id"])));
+    _setHeader()
+      .then((_) =>
+        setState(() => chatSocket = IOWebSocketChannel.connect(
+          chatSocketUrl(widget.chat["id"]),
+          headers: authHeader
+        ))
+      );
+    
   }
 
   void sendMessage() async {
-    await chatSocket.sink.add(messageController.text);
+    chatSocket.sink.add(messageController.text);
     
     setState(() => messageController.text = "");
   }
 
   void sendAttachment() async {}
+
+  Future <void> _setHeader() async{
+    authHeader = {
+      "authorization": "Token ${await getToken()}"
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +68,7 @@ class _ChatViewState extends State<ChatView> {
             Align(
               alignment: Alignment.bottomLeft,
               child: Container(
-                padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                padding: const EdgeInsets.only(left: 10, bottom: 10, top: 10),
                 height: 60,
                 width: double.infinity,
                 color: Colors.white,
@@ -68,13 +83,13 @@ class _ChatViewState extends State<ChatView> {
                           color: Colors.green,
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        child: Icon(Icons.add, color: Colors.white, size: 20),
+                        child: const Icon(Icons.add, color: Colors.white, size: 20),
                       ),
                     ),
-                    SizedBox(width: 15,),
+                    const SizedBox(width: 15,),
                     Expanded(
                       child: TextField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: "Write message...",
                           hintStyle: TextStyle(color: Colors.black54),
                           border: InputBorder.none,
@@ -82,10 +97,10 @@ class _ChatViewState extends State<ChatView> {
                         controller: messageController,
                       ),
                     ),
-                    SizedBox(width: 15,),
+                    const SizedBox(width: 15,),
                     FloatingActionButton(
                       onPressed: () => sendMessage(),
-                      child: Icon(Icons.send, color: Colors.white, size: 18),
+                      child: const Icon(Icons.send, color: Colors.white, size: 18),
                       tooltip: "Send Mesage",
                       backgroundColor: Colors.green,
                       elevation: 0,
@@ -96,7 +111,7 @@ class _ChatViewState extends State<ChatView> {
             ),
           ]
         : <Widget>[
-          Text("loading..."),
+          const Text("loading..."),
         ],
       ),
     );

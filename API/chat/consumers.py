@@ -23,7 +23,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
         
-        if not await sync_to_async(chat.is_member)(self.user):
+        if not await sync_to_async(chat.is_member, thread_sensitive=True)(self.user):
             await self.close()
             return
 
