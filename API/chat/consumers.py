@@ -1,9 +1,11 @@
+import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 
-from .models import Chat
+from .constants import CMD_SEND_MSG
+from .models import Chat, Message
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -20,8 +22,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             return
             
         try:
-            chat = await sync_to_async(Chat.objects.get, thread_sensitive=True)(pk=self.chat_id)
-            self.room_name = chat.pk
+            self.chat = await sync_to_async(Chat.objects.get, thread_sensitive=True)(pk=self.chat_id)
+            self.room_name = self.chat.pk
             self.room_group_name = f"chat_{self.room_name}"
         except Chat.DoesNotExist:
             await self.close()
@@ -31,11 +33,52 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
             
-        if not await sync_to_async(chat.is_member, thread_sensitive=True)(self.user):
+        if not await sync_to_async(self.chat.is_member, thread_sensitive=True)(self.user):
             await self.close()
             return
             
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
+        
         await self.accept()
     
     async def disconnect(self, close_code):
-        pass
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
+
+    async def receive(self, text_data):
+        text_data_json = json.loads(text_data)
+        message = text_data_json.get("message")
+
+        if message:
+            message_model = Message(
+                chat=self.chat,
+                author=self.user,
+                content=message,
+            )
+            await sync_to_async(message_model.save, thread_sensitive=True)()
+        
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                "type": "chatroom_message",
+                "command": CMD_SEND_MSG,
+                "message": message,
+                "username": self.user.username,
+            }
+        )
+    
+    async def chatroom_message(self, event):
+        command = event.get("command")
+        message = event.get("message")
+        username = event.get("username")
+        
+        self.send(json.dumps({
+            "command": command,
+            "message": message,
+            "username": username
+        }))

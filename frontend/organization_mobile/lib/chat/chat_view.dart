@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:organization_mobile/urls.dart';
@@ -33,11 +35,19 @@ class _ChatViewState extends State<ChatView> {
           headers: authHeader
         ))
       );
+  }
+
+  @override
+  void dispose() {
+    chatSocket.sink.close();
     
+    super.dispose();
   }
 
   void sendMessage() async {
-    chatSocket.sink.add(messageController.text);
+    chatSocket.sink.add(json.encode({
+      "message": messageController.text
+    }));
     
     setState(() => messageController.text = "");
   }
@@ -61,8 +71,8 @@ class _ChatViewState extends State<ChatView> {
         ? <Widget>[
             StreamBuilder(
               stream: chatSocket.stream,
-              builder: (context, data) {
-                return Text(data.hasData ? "${data.data}" : "");
+              builder: (context, snapshot) {
+                return Text(snapshot.hasData ? '${snapshot.data}' : '');
               },
             ),
             Align(
