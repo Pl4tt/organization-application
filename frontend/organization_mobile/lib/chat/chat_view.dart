@@ -21,8 +21,9 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
   TextEditingController messageController = TextEditingController();
-  var chatSocket;
   Map<String, dynamic>? authHeader;
+  var chatSocket;
+  var messageList = [];
 
   @override
   void initState() {
@@ -44,7 +45,9 @@ class _ChatViewState extends State<ChatView> {
     super.dispose();
   }
 
-  void sendMessage() async {
+  void loadMessages() {}
+
+  void sendMessage() {
     chatSocket.sink.add(json.encode({
       "message": messageController.text
     }));
@@ -72,7 +75,11 @@ class _ChatViewState extends State<ChatView> {
             StreamBuilder(
               stream: chatSocket.stream,
               builder: (context, snapshot) {
-                return Text(snapshot.hasData ? '${snapshot.data}' : '');
+                if (snapshot.hasData) {
+                  messageList.add(snapshot.data);
+                  return messageDisplay();
+                }
+                return const Text("no messages");
               },
             ),
             Align(
@@ -109,7 +116,7 @@ class _ChatViewState extends State<ChatView> {
                     ),
                     const SizedBox(width: 15,),
                     FloatingActionButton(
-                      onPressed: () => sendMessage(),
+                      onPressed: sendMessage,
                       child: const Icon(Icons.send, color: Colors.white, size: 18),
                       tooltip: "Send Mesage",
                       backgroundColor: Colors.green,
@@ -124,6 +131,20 @@ class _ChatViewState extends State<ChatView> {
           const Text("loading..."),
         ],
       ),
+    );
+  }
+
+  Widget messageDisplay() {
+    return ListView.builder(
+      itemCount: messageList.length,
+      itemBuilder: (BuildContext context, int index) {
+        var value = json.decode(messageList[index]);
+
+        return ListTile(
+          title: Text(value["username"]),
+          subtitle: Text(value["message"]),
+        );
+      }
     );
   }
 }

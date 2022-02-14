@@ -77,7 +77,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = event.get("message")
         username = event.get("username")
         
-        self.send(json.dumps({
+        await self.send(json.dumps({
             "command": command,
             "message": message,
             "username": username
