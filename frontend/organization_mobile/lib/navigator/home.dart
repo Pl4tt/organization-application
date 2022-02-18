@@ -20,7 +20,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   Icon appBarIcon = const Icon(Icons.search);
   Widget appBarTitle = const Text("Home");
-  TextEditingController queryController = new TextEditingController();
+  TextEditingController queryController = TextEditingController();
 
   void _search() async {
     String searchQuery = queryController.text;

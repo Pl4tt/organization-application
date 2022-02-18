@@ -14,7 +14,7 @@ class CreateTeam extends StatelessWidget {
     required this.callBackRefresh,
   }) : super(key: key);
 
-  TextEditingController nameController = new TextEditingController();
+  TextEditingController nameController = TextEditingController();
 
   void _createTeam(BuildContext context) async {
     int ownerId = json.decode((await client.post(

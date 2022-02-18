@@ -21,7 +21,7 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Search Results")),
+      appBar: AppBar(title: const Text("Search Results")),
       body: ListView.builder(
         itemCount: widget.accounts.length,
         itemBuilder: (BuildContext context, int index) {
