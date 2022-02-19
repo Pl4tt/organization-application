@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:organization_mobile/chat/cryptography.dart';
 import 'package:organization_mobile/urls.dart';
 
 class Login extends StatelessWidget {
@@ -26,6 +27,9 @@ class Login extends StatelessWidget {
     if (response.statusCode != 200) {
       return null;
     }
+
+    var keyPair = await generateKeyPair();
+    print(keyPair.privateKey.toString());
 
     await obtainToken(emailController.text, passwordController.text, client);
     
@@ -68,3 +72,4 @@ class Login extends StatelessWidget {
     );
   }
 }
+
