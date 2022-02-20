@@ -21,6 +21,7 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
   TextEditingController messageController = TextEditingController();
+  ScrollController scrollController = ScrollController();
   Map<String, dynamic>? authHeader;
   var chatSocket;
   var messageList = [];
@@ -28,6 +29,8 @@ class _ChatViewState extends State<ChatView> {
   @override
   void initState() {
     super.initState();
+
+    loadMessages();
 
     _setHeader()
       .then((_) =>
@@ -45,7 +48,18 @@ class _ChatViewState extends State<ChatView> {
     super.dispose();
   }
 
-  void loadMessages() {}
+  void loadMessages() async {
+    var response = await widget.client.get(
+      retrieveMessageUrl(widget.chat["id"]),
+      headers: {
+        "Authorization": "Token ${await getToken()}"
+      }
+    );
+
+    for (var message in json.decode(response.body)) {
+      setState(() => messageList.add(message));
+    }
+  }
 
   void sendMessage() {
     chatSocket.sink.add(json.encode({
@@ -76,10 +90,9 @@ class _ChatViewState extends State<ChatView> {
               stream: chatSocket.stream,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  messageList.add(snapshot.data);
-                  return messageDisplay();
+                  messageList.add(json.decode(snapshot.data.toString()));
                 }
-                return const Text("no messages");
+                return messageDisplay();
               },
             ),
             Align(
@@ -135,16 +148,20 @@ class _ChatViewState extends State<ChatView> {
   }
 
   Widget messageDisplay() {
-    return ListView.builder(
-      itemCount: messageList.length,
-      itemBuilder: (BuildContext context, int index) {
-        var value = json.decode(messageList[index]);
-
-        return ListTile(
-          title: Text(value["username"]),
-          subtitle: Text(value["message"]),
-        );
-      }
-    );
+    if (messageList.isNotEmpty) {
+      return ListView.builder(
+        itemCount: messageList.length,
+        itemBuilder: (BuildContext context, int index) {
+          var value = messageList[index];
+          
+          return ListTile(
+            title: Text(value["username"]),
+            subtitle: Text(value["message"]),
+            trailing: Text(value["date_created"]),
+          );
+        }
+      );
+    }
+    return const Text("No messages yet :(");
   }
 }

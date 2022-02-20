@@ -50,3 +50,27 @@ class ChatOverview(APIView):
             all_chats.append(data)
         
         return Response(all_chats, status=status.HTTP_200_OK)
+
+class RetrievePastMessages(APIView):
+
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, chat_id, format=None):
+        chat = Chat.objects.filter(pk=chat_id).first()
+
+        if not chat:
+            return Response({"error": "Chat with given id not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not chat.is_member(request.user):
+            return Response({"error": "You are not authenticated to read this chat."}, status=status.HTTP_403_FORBIDDEN)
+        
+        messages = []
+
+        for message in chat.messages.all():
+            messages.append({
+                "username": message.author.username,
+                "message": message.content,
+                "date_created": naturalday(message.date_created),
+            })
+
+        return Response(messages, status=status.HTTP_200_OK)

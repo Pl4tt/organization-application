@@ -3,6 +3,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
+from django.contrib.humanize.templatetags.humanize import naturalday
 
 from .constants import CMD_SEND_MSG
 from .models import Chat, Message
@@ -69,6 +70,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "command": CMD_SEND_MSG,
                 "message": message,
                 "username": self.user.username,
+                "date_created": naturalday(message_model.date_created),
             }
         )
     
@@ -76,9 +78,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         command = event.get("command")
         message = event.get("message")
         username = event.get("username")
+        date_created = event.get("date_created")
         
         await self.send(json.dumps({
             "command": command,
             "message": message,
-            "username": username
+            "username": username,
+            "date_created": date_created
         }))
