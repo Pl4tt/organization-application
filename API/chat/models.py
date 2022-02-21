@@ -23,3 +23,8 @@ class Message(models.Model):
 
     def __str__(self):
         return f"msg {self.author}, {self.chat}"
+
+    def delete(self, extinguisher):
+        if extinguisher == self.author:
+            self.content = f"This message has been deleted by {extinguisher}."
+            self.save()

@@ -55,6 +55,9 @@ Uri chatOverviewUrl = Uri.parse("http://10.0.2.2:8000/chat");
 Uri retrieveMessageUrl(int id)
   => Uri.parse("http://10.0.2.2:8000/chat/retrieve-messages/$id");
 
+Uri messageUrl(int id)
+  => Uri.parse("http://10.0.2.2:8000/chat/message/$id");
+
 Future<String?> getPrivateKey() async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getString("RSAprivateKey");

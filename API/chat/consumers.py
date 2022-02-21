@@ -69,6 +69,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "type": "chatroom_message",
                 "command": CMD_SEND_MSG,
                 "message": message,
+                "id": message.pk,
                 "username": self.user.username,
                 "date_created": naturalday(message_model.date_created),
             }
@@ -77,12 +78,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chatroom_message(self, event):
         command = event.get("command")
         message = event.get("message")
+        msg_id = event.get("id")
         username = event.get("username")
         date_created = event.get("date_created")
         
         await self.send(json.dumps({
             "command": command,
             "message": message,
+            "id": msg_id,
             "username": username,
             "date_created": date_created
         }))

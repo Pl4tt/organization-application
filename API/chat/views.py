@@ -6,7 +6,7 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.contrib.humanize.templatetags.humanize import naturalday
 
-from .models import Chat
+from .models import Chat, Message
 
 
 class CreateChatView(APIView):
@@ -51,7 +51,7 @@ class ChatOverview(APIView):
         
         return Response(all_chats, status=status.HTTP_200_OK)
 
-class RetrievePastMessages(APIView):
+class RetrievePastMessageView(APIView):
 
     permission_classes = (IsAuthenticated,)
 
@@ -68,9 +68,24 @@ class RetrievePastMessages(APIView):
 
         for message in chat.messages.all():
             messages.append({
+                "id": message.pk,
                 "username": message.author.username,
                 "message": message.content,
                 "date_created": naturalday(message.date_created),
             })
 
         return Response(messages, status=status.HTTP_200_OK)
+
+class MessageView(APIView):
+    
+    permission_classes = (IsAuthenticated,)
+
+    def delete(self, request, message_id, format=None):
+        message = Message.objects.filter(pk=message_id).first()
+
+        if not message:
+            return Response({"error": "message with given id doesn't exist."}, status=status.HTTP_400_BAD_REQUEST)
+
+        message.delete(request.user)
+
+        return Response({"success": "process ran successfully."}, status=status.HTTP_200_OK)

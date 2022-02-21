@@ -57,7 +57,7 @@ class _ChatViewState extends State<ChatView> {
     );
 
     for (var message in json.decode(response.body)) {
-      setState(() => messageList.add(message));
+      setState(() => messageList.insert(0, message));
     }
   }
 
@@ -67,6 +67,19 @@ class _ChatViewState extends State<ChatView> {
     }));
     
     setState(() => messageController.text = "");
+  }
+
+  void deleteMessage(int id) async {
+    var url = messageUrl(id);
+
+    widget.client.delete(
+      url,
+      headers: {
+        "Authorization": "Token ${await getToken()}"
+      }
+    );
+
+    loadMessages();
   }
 
   void sendAttachment() async {}
@@ -90,7 +103,7 @@ class _ChatViewState extends State<ChatView> {
               stream: chatSocket.stream,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  messageList.add(json.decode(snapshot.data.toString()));
+                  messageList.insert(0, json.decode(snapshot.data.toString()));
                 }
                 return messageDisplay();
               },
@@ -157,9 +170,12 @@ class _ChatViewState extends State<ChatView> {
           return ListTile(
             title: Text(value["username"]),
             subtitle: Text(value["message"]),
-            trailing: Text(value["date_created"]),
+            trailing: IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () => deleteMessage(value["id"]),
+            ),
           );
-        }
+        },
       );
     }
     return const Text("No messages yet :(");
