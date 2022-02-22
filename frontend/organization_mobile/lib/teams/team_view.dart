@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:organization_mobile/teams/navigator/team_chat.dart';
+import 'package:organization_mobile/teams/navigator/team_files.dart';
+import 'package:organization_mobile/teams/navigator/team_home.dart';
 
 enum TeamNavigationSelector {
   home,
@@ -48,17 +51,7 @@ class _TeamViewState extends State<TeamView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.team["name"]),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            tooltip: "Settings",
-            onPressed: () {},
-          ),
-        ]
-      ),
-      body: Container(),
+      body: buildContent(),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
@@ -82,5 +75,18 @@ class _TeamViewState extends State<TeamView> {
         onTap: _onItemTapped,
       )
     );
+  }
+  
+  Widget buildContent() {
+    switch (_currPage) {
+      case TeamNavigationSelector.home:
+        return TeamHome(client: widget.client);
+      
+      case TeamNavigationSelector.chat:
+        return TeamChat(client: widget.client);
+
+      case TeamNavigationSelector.files:
+        return TeamFiles(client: widget.client);
+    }
   }
 }
