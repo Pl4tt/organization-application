@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:organization_mobile/account/choose_option.dart';
@@ -19,9 +21,8 @@ class Account extends StatefulWidget {
 
 class _AccountState extends State<Account> {
   AppBar? appBar;
-  
-  bool isLoading = true;
 
+  var accountData;
   
 
   @override
@@ -69,18 +70,40 @@ class _AccountState extends State<Account> {
         "Authorization": "Token ${await getToken()}",
       }
     );
-    setState(() => isLoading = false);
+    setState(() => accountData = json.decode(response.body));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar ?? AppBar(title: const Text("Profile")),
-      body: isLoading
+      body: accountData == null
         ? const Text("Please authenticate first.")
-        : Column(
-
-        ), // TODO: Account overview
+        : Center(
+          child: Column(
+            children: [
+              Text(
+                '${accountData["username"]}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 50,
+                )
+              ),
+              Text(
+                'Name: ${accountData["first_name"]} ${accountData["last_name"]}',
+                style: const TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+              Text(
+                '\n${accountData["biography"]}',
+              ),
+              Text(
+                '\n\nContact: ${accountData["email"]}',
+              ),
+            ],
+          ),
+        ),
     );
   }
 

@@ -3,8 +3,12 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+const httpProtocol = "http";
+const wsProtocol = "ws";
+const baseUrl = "10.0.2.2:8000";
+
 // token handle
-Uri obtainTokenUrl = Uri.parse("http://10.0.2.2:8000/account/obtain-token");
+Uri obtainTokenUrl = Uri.parse("$httpProtocol://$baseUrl/account/obtain-token");
 
 Future<String> obtainToken(String username, String password, http.Client client) async {
   final prefs = await SharedPreferences.getInstance();
@@ -28,35 +32,35 @@ Future<String?> getToken() async {
 
 
 // account urls
-Uri registerUrl = Uri.parse("http://10.0.2.2:8000/account/register");
-Uri loginUrl = Uri.parse("http://10.0.2.2:8000/account/login");
-Uri logoutUrl = Uri.parse("http://10.0.2.2:8000/account/logout");
-Uri getAccountDataUrl = Uri.parse("http://10.0.2.2:8000/account/user");
+Uri registerUrl = Uri.parse("$httpProtocol://$baseUrl/account/register");
+Uri loginUrl = Uri.parse("$httpProtocol://$baseUrl/account/login");
+Uri logoutUrl = Uri.parse("$httpProtocol://$baseUrl/account/logout");
+Uri getAccountDataUrl = Uri.parse("$httpProtocol://$baseUrl/account/user");
 
 Uri searchUrl(String query) =>
-  Uri.parse("http://10.0.2.2:8000/account/search?search-query=$query");
+  Uri.parse("$httpProtocol://$baseUrl/account/search?search-query=$query");
 
 Uri getUserDataUrl(int id) =>
-  Uri.parse("http://10.0.2.2:8000/account/user?user-id=$id");
+  Uri.parse("$httpProtocol://$baseUrl/account/user?user-id=$id");
   
 
 // team urls
-Uri createTeamUrl = Uri.parse("http://10.0.2.2:8000/teams/create");
-Uri teamOverviewUrl = Uri.parse("http://10.0.2.2:8000/teams");
+Uri createTeamUrl = Uri.parse("$httpProtocol://$baseUrl/teams/create");
+Uri teamOverviewUrl = Uri.parse("$httpProtocol://$baseUrl/teams");
 
 
 // chat urls
 Uri chatSocketUrl(int id) =>
-  Uri.parse("ws://10.0.2.2:8000/ws/chat/$id");
+  Uri.parse("$wsProtocol://$baseUrl/ws/chat/$id");
 
-Uri createChatUrl = Uri.parse("http://10.0.2.2:8000/chat/create");
-Uri chatOverviewUrl = Uri.parse("http://10.0.2.2:8000/chat");
+Uri createChatUrl = Uri.parse("$httpProtocol://$baseUrl/chat/create");
+Uri chatOverviewUrl = Uri.parse("$httpProtocol://$baseUrl/chat");
 
 Uri retrieveMessageUrl(int id)
-  => Uri.parse("http://10.0.2.2:8000/chat/retrieve-messages/$id");
+  => Uri.parse("$httpProtocol://$baseUrl/chat/retrieve-messages/$id");
 
 Uri messageUrl(int id)
-  => Uri.parse("http://10.0.2.2:8000/chat/message/$id");
+  => Uri.parse("$httpProtocol://$baseUrl/chat/message/$id");
 
 Future<String?> getPrivateKey() async {
   final prefs = await SharedPreferences.getInstance();

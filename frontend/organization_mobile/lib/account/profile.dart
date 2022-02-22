@@ -17,9 +17,31 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.accountData["username"])),
-      body: Column(
-
-      ), // TODO: Profile overview
+      body: Center(
+        child: Column(
+          children: [
+            Text(
+              '${widget.accountData["username"]}',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 50,
+              )
+            ),
+            Text(
+              'Name: ${widget.accountData["first_name"]} ${widget.accountData["last_name"]}',
+              style: const TextStyle(
+                fontSize: 20,
+              ),
+            ),
+            Text(
+              '\n${widget.accountData["biography"]}',
+            ),
+            Text(
+              '\n\nContact: ${widget.accountData["email"]}',
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
