@@ -171,7 +171,7 @@ class _ChatViewState extends State<ChatView> {
             title: Text(value["username"]),
             subtitle: Text(value["message"]),
             trailing: IconButton(
-              icon: Icon(Icons.delete),
+              icon: const Icon(Icons.delete),
               onPressed: () => deleteMessage(value["id"]),
             ),
           );

@@ -69,7 +69,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "type": "chatroom_message",
                 "command": CMD_SEND_MSG,
                 "message": message,
-                "id": message.pk,
+                "id": message_model.pk,
                 "username": self.user.username,
                 "date_created": naturalday(message_model.date_created),
             }
