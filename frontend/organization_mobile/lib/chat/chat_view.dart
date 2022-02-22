@@ -169,7 +169,7 @@ class _ChatViewState extends State<ChatView> {
           
           return ListTile(
             title: Text(value["username"]),
-            subtitle: Text(value["message"]),
+            subtitle: Text('${value["message"]}\n${value["date_created"]}\n'),
             trailing: IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () => deleteMessage(value["id"]),
