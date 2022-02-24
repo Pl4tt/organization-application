@@ -35,7 +35,7 @@ class Register extends StatelessWidget {
       return null;
     }
 
-    var token = await obtainToken(emailController.text, pass1Controller.text, client);
+    await obtainToken(emailController.text, pass1Controller.text, client);
     
     callbackRebuild();
 
