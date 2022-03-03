@@ -3,6 +3,7 @@ import 'package:organization_mobile/navigator/chat.dart';
 import 'package:organization_mobile/navigator/home.dart';
 import 'package:organization_mobile/navigator/account.dart';
 import 'package:organization_mobile/navigator/teams.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:http/http.dart' as http;
 
 enum NavigationSelector {
@@ -43,25 +44,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
-  NavigationSelector _currPage = NavigationSelector.home;
+  int _selectedIndex = 3;
+  NavigationSelector _currPage = NavigationSelector.profile;
   http.Client client = http.Client();
-
 
   void _onItemTapped(int index) {
     switch (index) {
       case 0:
         _currPage = NavigationSelector.home;
         break;
-      
+
       case 1:
         _currPage = NavigationSelector.chat;
         break;
-      
+
       case 2:
         _currPage = NavigationSelector.teams;
         break;
-      
+
       case 3:
         _currPage = NavigationSelector.profile;
         break;
@@ -75,31 +75,45 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: buildContent(),    
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+      body: buildContent(),
+      bottomNavigationBar: ConvexAppBar.badge(
+        {},
+        style: TabStyle.textIn,
+        items: const <TabItem>[
+          TabItem(
+            icon: Icon(
+              Icons.home,
+              color: Colors.white,
+            ),
+            title: 'Home',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_rounded),
-            label: 'Chat',
+          TabItem(
+            icon: Icon(
+              Icons.chat_rounded,
+              color: Colors.white,
+            ),
+            title: 'Chat',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            label: 'Teams',
+          TabItem(
+            icon: Icon(
+              Icons.group,
+              color: Colors.white,
+            ),
+            title: 'Teams',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Profile',
+          TabItem(
+            icon: Icon(
+              Icons.account_circle,
+              color: Colors.white,
+            ),
+            title: 'Profile',
           ),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: true,
+        backgroundColor: Colors.green,
+        badgeColor: Colors.white,
+        color: Colors.white,
+        badgeTextColor: Colors.white,
+        initialActiveIndex: 3,
         onTap: _onItemTapped,
       ),
     );
@@ -109,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (_currPage) {
       case NavigationSelector.home:
         return Home(client: client);
-      
+
       case NavigationSelector.chat:
         return Chat(client: client);
 
