@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:organization_mobile/account/search.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:speech_to_text/speech_to_text.dart'  as stt;
+
 
 class Home extends StatefulWidget {
   final http.Client client;
@@ -63,6 +65,11 @@ class _SearchDelegate extends SearchDelegate<String> {
   final client;
   var results;
 
+  stt.SpeechToText _speech = stt.SpeechToText();
+  bool _isListening = false;
+  String _text = "";
+  double _confidence = 1.0;
+
   _SearchDelegate({
     required http.Client client
   }) : client = client;
@@ -89,9 +96,7 @@ class _SearchDelegate extends SearchDelegate<String> {
       ? IconButton(
           tooltip: "Voice Search",
           icon: const Icon(Icons.mic),
-          onPressed: () {
-            query = "TODO: implement voice";
-          }
+          onPressed: _listen,
         )
       : IconButton(
           tooltip: "Clear",
@@ -120,5 +125,29 @@ class _SearchDelegate extends SearchDelegate<String> {
         )
       ]
     );
+  }
+
+  _listen() async {
+    if (!_isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (val) => print("onStatus: $val"),
+        onError: (val) => print("onError: $val"),
+      );
+      if (available) {
+        _isListening = true;
+        _speech.listen(
+          onResult: (val) {
+            query = val.recognizedWords;
+
+            if (val.hasConfidenceRating && val.confidence > 0) {
+              _confidence = val.confidence;
+            }
+          }
+        );
+      }
+    } else {
+      _isListening = false;
+      _speech.stop();
+    }
   }
 }
