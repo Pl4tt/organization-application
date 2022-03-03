@@ -1,15 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:organization_mobile/account/profile.dart';
+import 'package:organization_mobile/urls.dart';
 
 class Search extends StatefulWidget {
   http.Client client;
-  var accounts;
+  var query;
 
   Search({
     Key? key,
     required this.client,
-    required this.accounts,
+    required this.query,
   }) : super(key: key);
 
   @override
@@ -17,23 +20,45 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  var results;
+  bool searchDone = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _search();
+  }
+
+  Future<void> _search() async {
+    setState(() => searchDone = false);
+
+    String searchQuery = widget.query;
+
+    results = json.decode((await widget.client.get(
+      searchUrl(searchQuery)
+    )).body);
+
+    setState(() => searchDone = true);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Search Results")),
-      body: ListView.builder(
-        itemCount: widget.accounts.length,
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            title: Text(widget.accounts[index]["username"]),
-            subtitle: Text(widget.accounts[index]["biography"]),
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => Profile(accountData: widget.accounts[index])
-            )),
-          );
-        },
-      )
+      body: searchDone && results.isNotEmpty
+      ? ListView.builder(
+          itemCount: results.length,
+          itemBuilder: (BuildContext context, int index) {
+            return ListTile(
+              title: Text(results[index]["username"]),
+              subtitle: Text(results[index]["biography"]),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => Profile(accountData: results[index])
+              )),
+            );
+          },
+        )
+      : const Text("No results"),
     );
   }
 }

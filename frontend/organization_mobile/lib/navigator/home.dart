@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:organization_mobile/account/search.dart';
-import 'package:organization_mobile/urls.dart';
+import 'package:shimmer/shimmer.dart';
 
 class Home extends StatefulWidget {
   final http.Client client;
@@ -18,21 +16,16 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  var _delegateSearch;
   Icon appBarIcon = const Icon(Icons.search);
   Widget appBarTitle = const Text("Home");
   TextEditingController queryController = TextEditingController();
 
-  void _search() async {
-    String searchQuery = queryController.text;
+  @override
+  void initState() {
+    super.initState();
 
-    var responseBody = json.decode((await widget.client.get(
-      searchUrl(searchQuery)
-    )).body);
-
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Search(
-      client: widget.client,
-      accounts: responseBody,
-    )));
+    _delegateSearch = _SearchDelegate(client: widget.client);
   }
 
   @override
@@ -41,46 +34,91 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: appBarTitle,
         actions: [
-          IconButton(onPressed: () {
-            setState(() {
-              if (appBarIcon.icon == Icons.search) {
-                appBarIcon = const Icon(Icons.cancel);
-                appBarTitle = ListTile(
-                  leading: IconButton(
-                    icon: const Icon(
-                      Icons.search,
-                      color: Colors.white,
-                      size: 28
-                    ),
-                    onPressed: _search,
-                  ),
-                  title: TextField(
-                    decoration: const InputDecoration(
-                      hintText: "Search...",
-                      hintStyle: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontStyle: FontStyle.italic,
-                      ),
-                      border: InputBorder.none,
-                    ),
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
-                    controller: queryController,
+          IconButton(
+            tooltip: "Search",
+            icon: const Icon(Icons.search),
+            onPressed: () async {
+              final String? selected = await showSearch<String>(
+                context: context,
+                delegate: _delegateSearch,
+              );
+              if (mounted && selected != null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("You've selected the word: $selected")
                   ),
                 );
-              } else {
-                appBarIcon = const Icon(Icons.search);
-                appBarTitle = const Text("Home");
               }
-            });
-            },
-            icon: appBarIcon
+            }
           )
         ]
       ),
       body: const Text("HOME"),
+    );
+  }
+}
+
+
+class _SearchDelegate extends SearchDelegate<String> {
+  final client;
+  var results;
+
+  _SearchDelegate({
+    required http.Client client
+  }) : client = client;
+  
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      tooltip: "Back",
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow,
+        progress: transitionAnimation,
+      ),
+      onPressed: () {
+        close(context, "");
+      }
+    );
+  }
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return <Widget>[
+      query.isEmpty
+      ? IconButton(
+          tooltip: "Voice Search",
+          icon: const Icon(Icons.mic),
+          onPressed: () {
+            query = "TODO: implement voice";
+          }
+        )
+      : IconButton(
+          tooltip: "Clear",
+          icon: const Icon(Icons.clear),
+          onPressed: () {
+            query = "";
+            showSuggestions(context);
+          }
+      ),
+    ];
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {    
+    return Search(client: client, query: query);
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return ListView(
+      children: [
+        Shimmer.fromColors(
+          baseColor: Colors.grey[400]!,
+          highlightColor: Colors.grey[100]!,
+          child: const Text("child")
+        )
+      ]
     );
   }
 }
