@@ -109,11 +109,8 @@ class _MyHomePageState extends State<MyHomePage> {
             title: 'Profile',
           ),
         ],
-        backgroundColor: Colors.green,
-        badgeColor: Colors.white,
-        color: Colors.white,
-        badgeTextColor: Colors.white,
-        initialActiveIndex: 3,
+        backgroundColor: Theme.of(context).primaryColor,
+        initialActiveIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
     );

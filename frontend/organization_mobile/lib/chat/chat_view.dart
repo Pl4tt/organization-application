@@ -123,7 +123,7 @@ class _ChatViewState extends State<ChatView> {
                         height: 30,
                         width: 30,
                         decoration: BoxDecoration(
-                          color: Colors.green,
+                          color: Theme.of(context).primaryColor,
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: const Icon(Icons.add, color: Colors.white, size: 20),
@@ -145,7 +145,7 @@ class _ChatViewState extends State<ChatView> {
                       onPressed: sendMessage,
                       child: const Icon(Icons.send, color: Colors.white, size: 18),
                       tooltip: "Send Mesage",
-                      backgroundColor: Colors.green,
+                      backgroundColor: Theme.of(context).primaryColor,
                       elevation: 0,
                     ),
                   ],

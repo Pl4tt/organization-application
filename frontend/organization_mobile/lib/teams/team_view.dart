@@ -1,3 +1,4 @@
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:organization_mobile/teams/navigator/team_chat.dart';
@@ -52,26 +53,34 @@ class _TeamViewState extends State<TeamView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: buildContent(),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home",
+      bottomNavigationBar: ConvexAppBar.badge(
+        {},
+        style: TabStyle.textIn,
+        items: const <TabItem>[
+          TabItem(
+            icon: Icon(
+              Icons.home,
+              color: Colors.white,
+            ),
+            title: "Home",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_rounded),
-            label: "Chat",
+          TabItem(
+            icon: Icon(
+              Icons.chat_rounded,
+              color: Colors.white,
+            ),
+            title: "Chat",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.folder),
-            label: "Files",
+          TabItem(
+            icon: Icon(
+              Icons.folder,
+              color: Colors.white,
+            ),
+            title: "Files",
           ),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: true,
+        backgroundColor: Theme.of(context).primaryColor,
+        initialActiveIndex: _selectedIndex,
         onTap: _onItemTapped,
       )
     );
