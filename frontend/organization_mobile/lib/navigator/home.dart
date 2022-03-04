@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:organization_mobile/account/search.dart';
+import 'package:organization_mobile/urls.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:speech_to_text/speech_to_text.dart'  as stt;
 
@@ -44,13 +45,6 @@ class _HomeState extends State<Home> {
                 context: context,
                 delegate: _delegateSearch,
               );
-              if (mounted && selected != null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("You've selected the word: $selected")
-                  ),
-                );
-              }
             }
           )
         ]
@@ -69,6 +63,8 @@ class _SearchDelegate extends SearchDelegate<String> {
   bool _isListening = false;
   String _text = "";
   double _confidence = 1.0;
+  
+  List<String> history = [];
 
   _SearchDelegate({
     required http.Client client
@@ -110,29 +106,56 @@ class _SearchDelegate extends SearchDelegate<String> {
   }
 
   @override
-  Widget buildResults(BuildContext context) {    
+  Widget buildResults(BuildContext context) {  
+    history.insert(0, query);
+
     return Search(client: client, query: query);
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return ListView(
-      children: [
-        Shimmer.fromColors(
-          baseColor: Colors.grey[400]!,
-          highlightColor: Colors.grey[100]!,
-          child: const Text("child")
-        )
-      ]
+    List<String> suggestions = query.isEmpty
+      ? history
+      : history.where((word) => word.startsWith(query)).toList();
+    
+    return ListView.builder(
+      itemCount: suggestions.length,
+      itemBuilder: (BuildContext context, int index) {
+        var suggestion = suggestions[index];
+
+        return ListTile(
+          leading: const Icon(Icons.history),
+          title: RichText(
+            text: TextSpan(
+              text: suggestion.substring(0, query.length),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[900],
+                fontFamily: "Helvetica"
+              ),
+              children: <TextSpan>[
+                TextSpan(
+                  text: suggestion.substring(query.length),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.normal
+                  )
+                )
+              ]
+            )
+          ),
+          onTap: () {
+            query = suggestion;
+            showResults(context);
+          }
+        );
+      }
     );
   }
 
   _listen() async {
     if (!_isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (val) => print("onStatus: $val"),
-        onError: (val) => print("onError: $val"),
-      );
+      bool available = await _speech.initialize();
+
       if (available) {
         _isListening = true;
         _speech.listen(
