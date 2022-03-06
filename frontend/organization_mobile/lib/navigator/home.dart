@@ -130,7 +130,7 @@ class _SearchDelegate extends SearchDelegate<String> {
               text: suggestion.substring(0, query.length),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.grey[900],
+                color: Theme.of(context).hintColor,
                 fontFamily: "Helvetica"
               ),
               children: <TextSpan>[

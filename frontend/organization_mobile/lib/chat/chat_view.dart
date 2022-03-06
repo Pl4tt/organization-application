@@ -114,7 +114,7 @@ class _ChatViewState extends State<ChatView> {
                 padding: const EdgeInsets.only(left: 10, bottom: 10, top: 10),
                 height: 60,
                 width: double.infinity,
-                color: Colors.white,
+                color: Theme.of(context).backgroundColor.withOpacity(1),
                 child: Row(
                   children: <Widget>[
                     GestureDetector(
@@ -134,7 +134,6 @@ class _ChatViewState extends State<ChatView> {
                       child: TextField(
                         decoration: const InputDecoration(
                           hintText: "Write message...",
-                          hintStyle: TextStyle(color: Colors.black54),
                           border: InputBorder.none,
                         ),
                         controller: messageController,

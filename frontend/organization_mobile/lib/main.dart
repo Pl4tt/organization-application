@@ -5,6 +5,7 @@ import 'package:organization_mobile/navigator/account.dart';
 import 'package:organization_mobile/navigator/teams.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:organization_mobile/urls.dart';
 
 enum NavigationSelector {
   home,
@@ -27,7 +28,13 @@ class MyApp extends StatelessWidget {
       title: 'Organization Application',
       theme: ThemeData(
         primarySwatch: Colors.green,
+        brightness: Brightness.light,
       ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        backgroundColor: Colors.black54,
+      ),
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(title: 'Organization Application'),
     );

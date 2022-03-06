@@ -67,3 +67,63 @@ Future<String?> getPrivateKey() async {
   return prefs.getString("RSAprivateKey");
 }
 
+// settings urls
+// shared preferences key constants
+String theme = "theme";
+String useSystemTheme = "useSystemTheme";
+
+Future<void> setSharedPrefs(String type, dynamic key, dynamic value) async {
+  final prefs = await SharedPreferences.getInstance();
+  
+  switch (type) {
+    case "String":
+      prefs.setString(key, value);
+      break;
+      
+    case "bool":
+      prefs.setBool(key, value);
+      break;
+      
+    case "int":
+      prefs.setInt(key, value);
+      break;
+
+    case "double":
+      prefs.setDouble(key, value);
+      break;
+
+    case "List<String>":
+      prefs.setStringList(key, value);
+      break;
+  }
+}
+
+Future<dynamic> getSharedPrefs(String type, dynamic key) async {
+  final prefs = await SharedPreferences.getInstance();
+
+  dynamic result;
+
+  switch (type) {
+    case "String":
+      result = prefs.getString(key);
+      break;
+      
+    case "bool":
+      result = prefs.getBool(key);
+      break;
+      
+    case "int":
+      result = prefs.getInt(key);
+      break;
+
+    case "double":
+      result = prefs.getDouble(key);
+      break;
+
+    case "List<String>":
+      result = prefs.getStringList(key);
+      break;
+  }
+
+  return result;
+}
