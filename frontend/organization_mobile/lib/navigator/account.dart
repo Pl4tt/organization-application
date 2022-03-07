@@ -136,7 +136,10 @@ class _AccountState extends State<Account> {
             tooltip: "Account Settings",
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => Settings()
+                builder: (context) => Settings(
+                  accountData: accountData,
+                  client: widget.client,
+                )
               )
             ),
           ),
