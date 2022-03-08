@@ -46,13 +46,13 @@ class _AccountSettingsState extends State<AccountSettings> {
                 children: <Widget>[
                   ListTile(
                     leading: Icon(Icons.person_outline, color: Theme.of(context).primaryColor),
-                    title: const Text("Change Personal Data"),
+                    title: const Text("Personal Data"),
                     trailing: const Icon(Icons.keyboard_arrow_right),
                     onTap: () {},
                   ),
                   ListTile(
                     leading: Icon(Icons.privacy_tip_outlined, color: Theme.of(context).primaryColor),
-                    title: const Text("Change Privacy Settings"),
+                    title: const Text("Privacy Settings"),
                     trailing: const Icon(Icons.keyboard_arrow_right),
                     onTap: () {},
                   ),
