@@ -18,7 +18,7 @@ class _TeamChatState extends State<TeamChat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Team Chat"),
+        title: const Text("Team Chat"),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -27,7 +27,7 @@ class _TeamChatState extends State<TeamChat> {
           ),
         ],
       ),
-      body: Text("team chat"),
+      body: const Text("team chat"),
     );
   }
 }

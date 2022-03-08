@@ -6,7 +6,7 @@ import 'package:organization_mobile/urls.dart';
 
 class CreateTeam extends StatelessWidget {
   final http.Client client;
-  final callBackRefresh;
+  final Function callBackRefresh;
 
   CreateTeam({
     Key? key,
@@ -14,7 +14,7 @@ class CreateTeam extends StatelessWidget {
     required this.callBackRefresh,
   }) : super(key: key);
 
-  TextEditingController nameController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
 
   void _createTeam(BuildContext context) async {
     int ownerId = json.decode((await client.post(

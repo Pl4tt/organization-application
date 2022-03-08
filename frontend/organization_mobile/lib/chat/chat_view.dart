@@ -6,10 +6,10 @@ import 'package:organization_mobile/urls.dart';
 import 'package:web_socket_channel/io.dart';
 
 class ChatView extends StatefulWidget {
-  http.Client client;
-  Map chat;
+  final http.Client client;
+  final Map chat;
 
-  ChatView({
+  const ChatView({
     Key? key,
     required this.client,
     required this.chat,
@@ -23,8 +23,8 @@ class _ChatViewState extends State<ChatView> {
   TextEditingController messageController = TextEditingController();
   ScrollController scrollController = ScrollController();
   Map<String, dynamic>? authHeader;
-  var chatSocket;
-  var messageList = [];
+  dynamic chatSocket;
+  List messageList = [];
 
   @override
   void initState() {

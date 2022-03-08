@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:organization_mobile/account/theme_settings.dart';
+import 'package:organization_mobile/account/settings/account_settings.dart';
+import 'package:organization_mobile/account/settings/theme_settings.dart';
 import 'package:organization_mobile/urls.dart';
 
 class Settings extends StatefulWidget {
-  final accountData;
+  final Map accountData;
   final http.Client client;
 
   const Settings({
@@ -53,7 +54,11 @@ class _SettingsState extends State<Settings> {
                 )),
                 leading: const Icon(Icons.person, color: Colors.white),
                 trailing: const Icon(Icons.edit, color: Colors.white),
-                onTap: () {},
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => AccountSettings(
+                    accountData: widget.accountData,
+                  )
+                )),
               ),
             ),
             Text("Preference Settings", style: TextStyle(

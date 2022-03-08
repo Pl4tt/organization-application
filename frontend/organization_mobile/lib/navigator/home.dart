@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:organization_mobile/account/search.dart';
-import 'package:organization_mobile/urls.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:speech_to_text/speech_to_text.dart'  as stt;
 
 
@@ -19,7 +17,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  var _delegateSearch;
+  _SearchDelegate? _delegateSearch;
   Icon appBarIcon = const Icon(Icons.search);
   Widget appBarTitle = const Text("Home");
   TextEditingController queryController = TextEditingController();
@@ -41,9 +39,9 @@ class _HomeState extends State<Home> {
             tooltip: "Search",
             icon: const Icon(Icons.search),
             onPressed: () async {
-              final String? selected = await showSearch<String>(
+              await showSearch<String>(
                 context: context,
-                delegate: _delegateSearch,
+                delegate: _delegateSearch!,
               );
             }
           )
@@ -56,19 +54,16 @@ class _HomeState extends State<Home> {
 
 
 class _SearchDelegate extends SearchDelegate<String> {
-  final client;
-  var results;
+  final http.Client client;
 
-  stt.SpeechToText _speech = stt.SpeechToText();
+  final stt.SpeechToText _speech = stt.SpeechToText();
   bool _isListening = false;
-  String _text = "";
-  double _confidence = 1.0;
   
   List<String> history = [];
 
   _SearchDelegate({
-    required http.Client client
-  }) : client = client;
+    required this.client
+  });
   
 
   @override
@@ -161,10 +156,6 @@ class _SearchDelegate extends SearchDelegate<String> {
         _speech.listen(
           onResult: (val) {
             query = val.recognizedWords;
-
-            if (val.hasConfidenceRating && val.confidence > 0) {
-              _confidence = val.confidence;
-            }
           }
         );
       }

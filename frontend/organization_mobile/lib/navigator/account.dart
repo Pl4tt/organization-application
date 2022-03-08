@@ -22,7 +22,7 @@ class Account extends StatefulWidget {
 class _AccountState extends State<Account> {
   AppBar? appBar;
 
-  var accountData;
+  Map? accountData;
   
 
   @override
@@ -83,23 +83,23 @@ class _AccountState extends State<Account> {
           child: Column(
             children: [
               Text(
-                '${accountData["username"]}',
+                '${accountData!["username"]}',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 50,
                 )
               ),
               Text(
-                'Name: ${accountData["first_name"]} ${accountData["last_name"]}',
+                'Name: ${accountData!["first_name"]} ${accountData!["last_name"]}',
                 style: const TextStyle(
                   fontSize: 20,
                 ),
               ),
               Text(
-                '\n${accountData["biography"]}',
+                '\n${accountData!["biography"]}',
               ),
               Text(
-                '\n\nContact: ${accountData["email"]}',
+                '\n\nContact: ${accountData!["email"]}',
               ),
             ],
           ),
@@ -137,7 +137,7 @@ class _AccountState extends State<Account> {
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => Settings(
-                  accountData: accountData,
+                  accountData: accountData!,
                   client: widget.client,
                 )
               )

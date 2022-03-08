@@ -12,10 +12,10 @@ enum TeamNavigationSelector {
 }
 
 class TeamView extends StatefulWidget {
-  http.Client client;
-  Map team;
+  final http.Client client;
+  final Map team;
 
-  TeamView({
+  const TeamView({
     Key? key,
     required this.client,
     required this.team,
@@ -54,7 +54,7 @@ class _TeamViewState extends State<TeamView> {
     return Scaffold(
       body: buildContent(),
       bottomNavigationBar: ConvexAppBar.badge(
-        {},
+        const {},
         style: TabStyle.textIn,
         items: const <TabItem>[
           TabItem(

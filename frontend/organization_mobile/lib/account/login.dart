@@ -13,8 +13,8 @@ class Login extends StatelessWidget {
   }) : super(key: key);
 
   // fields = fields = ("email", "password")
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   void _login(BuildContext context) async {
     var data = {

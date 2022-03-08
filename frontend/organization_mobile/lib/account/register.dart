@@ -13,12 +13,12 @@ class Register extends StatelessWidget {
   }) : super(key: key);
 
   // fields = ("email", "username", "first_name", "last_name", "password1", "password2")
-  TextEditingController emailController = TextEditingController();
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
-  TextEditingController pass1Controller = TextEditingController();
-  TextEditingController pass2Controller = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController pass1Controller = TextEditingController();
+  final TextEditingController pass2Controller = TextEditingController();
 
   void _register(BuildContext context) async {
     var data = {

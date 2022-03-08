@@ -18,7 +18,7 @@ class _TeamFilesState extends State<TeamFiles> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Team Files"),
+        title: const Text("Team Files"),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -27,7 +27,7 @@ class _TeamFilesState extends State<TeamFiles> {
           ),
         ],
       ),
-      body: Text("team files"),
+      body: const Text("team files"),
     );
   }
 }

@@ -18,7 +18,7 @@ class _TeamHomeState extends State<TeamHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Team Home"),
+        title: const Text("Team Home"),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -27,7 +27,7 @@ class _TeamHomeState extends State<TeamHome> {
           ),
         ],
       ),
-      body: Text("team home"),
+      body: const Text("team home"),
     );
   }
 }

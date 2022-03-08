@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:organization_mobile/urls.dart';
 
 class ThemeSettings extends StatefulWidget {
-  String currTheme;
-  Function refreshCallback;
+  final String currTheme;
+  final Function refreshCallback;
 
-  ThemeSettings({
+  const ThemeSettings({
     Key? key,
     required this.currTheme,
     required this.refreshCallback,

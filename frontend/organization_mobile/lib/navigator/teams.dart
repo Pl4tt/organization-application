@@ -19,7 +19,7 @@ class Teams extends StatefulWidget {
 }
 
 class _TeamsState extends State<Teams> {
-  var teams;
+  dynamic teams;
 
   @override
   void initState() {

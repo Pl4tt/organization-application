@@ -4,7 +4,7 @@ import 'package:organization_mobile/urls.dart';
 
 class CreateChat extends StatelessWidget {
   final http.Client client;
-  Function refreshCallback;
+  final Function refreshCallback;
 
   CreateChat({
     Key? key,
@@ -12,7 +12,7 @@ class CreateChat extends StatelessWidget {
     required this.refreshCallback,
   }) : super(key: key);
 
-  TextEditingController emailController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
   Future<void> _createChat(BuildContext context) async {
     var response = await client.post(

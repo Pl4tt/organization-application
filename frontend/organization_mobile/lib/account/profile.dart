@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Profile extends StatefulWidget {
-  final accountData;
+  final Map accountData;
 
   const Profile({
     Key? key,

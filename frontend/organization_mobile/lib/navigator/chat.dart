@@ -19,7 +19,7 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
-  var chats;
+  dynamic chats;
 
   @override
   void initState() {

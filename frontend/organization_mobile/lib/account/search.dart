@@ -6,10 +6,10 @@ import 'package:organization_mobile/account/profile.dart';
 import 'package:organization_mobile/urls.dart';
 
 class Search extends StatefulWidget {
-  http.Client client;
-  var query;
+  final http.Client client;
+  final String query;
 
-  Search({
+  const Search({
     Key? key,
     required this.client,
     required this.query,
@@ -20,7 +20,7 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  var results;
+  dynamic results;
   bool searchDone = false;
 
   @override
