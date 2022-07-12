@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -63,29 +64,31 @@ class _TeamsState extends State<Teams> {
       body: RefreshIndicator(
         onRefresh: _refreshTeams,
         child: teams != null
-          ? ListView.builder(
-            itemCount: teams.length,
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                title: Text(teams[index]["name"]),
-                subtitle: Text("Created at " + teams[index]["date_created"]),
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => TeamView(
-                    client: widget.client,
-                    team: {
-                      "id": teams[index]["id"],
-                      "name": teams[index]["name"],
-                      "date_created": teams[index]["date_created"],
-                      "last_update": teams[index]["last_update"],
-                      "owner": teams[index]["owner"],
-                      "administrators": teams[index]["administrators"],
-                      "members": teams[index]["members"],
-                    }
-                  ),
-                ))
-              );
-            },
-          )
+          ? teams.runtimeType != List && teams.containsKey("detail")
+            ? Text("ERROR " + teams["detail"])
+            : ListView.builder(
+              itemCount: teams.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text(teams[index]["name"]),
+                  subtitle: Text("Created at " + teams[index]["date_created"]),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => TeamView(
+                      client: widget.client,
+                      team: {
+                        "id": teams[index]["id"],
+                        "name": teams[index]["name"],
+                        "date_created": teams[index]["date_created"],
+                        "last_update": teams[index]["last_update"],
+                        "owner": teams[index]["owner"],
+                        "administrators": teams[index]["administrators"],
+                        "members": teams[index]["members"],
+                      }
+                    ),
+                  ))
+                );
+              },
+            )
           : const Text("loading..."),
       ),
     );

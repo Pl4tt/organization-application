@@ -35,7 +35,7 @@ class _ChatState extends State<Chat> {
         "Authorization": "Token ${await getToken()}"
       }
     );
-
+    
     setState(() => chats = json.decode(response.body));
   }
 
@@ -60,27 +60,29 @@ class _ChatState extends State<Chat> {
       body: RefreshIndicator(
         onRefresh: _refreshChats,
         child: chats != null
-          ? ListView.builder(
-            itemCount: chats.length,
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                title: Text(chats[index]["chatting_person_username"]),
-                subtitle: Text("Created at " + chats[index]["date_created"]),
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ChatView(
-                    client: widget.client,
-                    chat: {
-                      "id": chats[index]["id"],
-                      "self": chats[index]["self"],
-                      "chatting_person": chats[index]["chatting_person"],
-                      "chatting_person_username": chats[index]["chatting_person_username"],
-                      "date_created": chats[index]["date_created"],
-                    }
-                  ),
-                ))
-              );
-            },
-          )
+          ? chats.runtimeType != List && chats.containsKey("detail")
+            ? Text("ERROR " + chats["detail"])
+            : ListView.builder(
+              itemCount: chats.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text(chats[index]["chatting_person_username"]),
+                  subtitle: Text("Created at " + chats[index]["date_created"]),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ChatView(
+                      client: widget.client,
+                      chat: {
+                        "id": chats[index]["id"],
+                        "self": chats[index]["self"],
+                        "chatting_person": chats[index]["chatting_person"],
+                        "chatting_person_username": chats[index]["chatting_person_username"],
+                        "date_created": chats[index]["date_created"],
+                      }
+                    ),
+                  ))
+                );
+              },
+            )
           : const Text("loading..."),
       ),
     );

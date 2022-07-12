@@ -12,7 +12,7 @@ class Login extends StatelessWidget {
     required this.callbackRebuild,
   }) : super(key: key);
 
-  // fields = fields = ("email", "password")
+  // fields = ("email", "password")
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 

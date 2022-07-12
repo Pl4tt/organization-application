@@ -99,7 +99,7 @@ class _ChatViewState extends State<ChatView> {
       body: Stack(
         children: chatSocket != null
         ? <Widget>[
-            StreamBuilder(
+            StreamBuilder(  // messages
               stream: chatSocket.stream,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -108,7 +108,7 @@ class _ChatViewState extends State<ChatView> {
                 return messageDisplay();
               },
             ),
-            Align(
+            Align(  // write message
               alignment: Alignment.bottomLeft,
               child: Container(
                 padding: const EdgeInsets.only(left: 10, bottom: 10, top: 10),
@@ -162,18 +162,21 @@ class _ChatViewState extends State<ChatView> {
   Widget messageDisplay() {
     if (messageList.isNotEmpty) {
       return ListView.builder(
-        itemCount: messageList.length,
+        itemCount: messageList.length + 1,
         itemBuilder: (BuildContext context, int index) {
-          var value = messageList[index];
-          
-          return ListTile(
-            title: Text(value["username"]),
-            subtitle: Text('${value["message"]}\n${value["date_created"]}\n'),
-            trailing: IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () => deleteMessage(value["id"]),
-            ),
-          );
+          if (index != messageList.length) {
+            var value = messageList[index];
+            
+            return ListTile(
+              title: Text(value["username"]),
+              subtitle: Text('${value["message"]}\n${value["date_created"]}\n'),
+              trailing: IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () => deleteMessage(value["id"]),
+              ),
+            );
+          }
+          return const ListTile();  // distance between write message and last chat message
         },
       );
     }

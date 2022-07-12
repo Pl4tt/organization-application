@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:organization_mobile/account/settings/account_settings.dart';
+import 'package:organization_mobile/account/settings/notification_settings.dart';
 import 'package:organization_mobile/account/settings/theme_settings.dart';
 import 'package:organization_mobile/urls.dart';
 
@@ -99,6 +100,32 @@ class _SettingsState extends State<Settings> {
                         currTheme: currTheme,
                         refreshCallback: setVariables,
                       ),
+                    )),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.format_paint, color: Theme.of(context).primaryColor),
+                    title: const Text("Notifications"),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        SizedBox(
+                          width: 25,
+                          height: 25,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).brightness == Brightness.dark ? Colors.black : Colors.white,
+                              border: Border.all(
+                                color: Theme.of(context).primaryColor,
+                                width: 3,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const Icon(Icons.keyboard_arrow_right),
+                      ],
+                    ),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => NotificationSettings(),
                     )),
                   ),
                 ],
